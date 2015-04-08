@@ -1,0 +1,25 @@
+CC=gcc
+CFLAGS=-c -Wall
+ALLLIBS=fonctionsTCP.a
+PROJET=TCP
+
+
+all: ${ALLLIBS} ${PROJET}
+
+${PROJET}: ${ALLLIBS}
+	${CC} -Wall -o server${PROJET} server${PROJET}.c ${ALLLIBS}
+	${CC} -Wall -o client${PROJET} client${PROJET}.c ${ALLLIBS}
+
+fonctionsTCP.a: fonctionsTCP.o
+	ar ruv fonctionsTCP.a fonctionsTCP.o
+	ranlib fonctionsTCP.a
+	
+libTCP: fonctionsTCP.o
+	ar ruv fonctionsTCP.a fonctionsTCP.o
+	ranlib fonctionsTCP.a
+
+fonctionsTCP.o: fonctionsTCP.c
+	${CC} ${CFLAGS} fonctionsTCP.c -o fonctionsTCP.o
+
+clean:
+	rm -rf *o
