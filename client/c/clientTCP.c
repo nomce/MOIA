@@ -9,7 +9,6 @@ int main(int argc, char **argv) {
 	    port,                /* variables de lecture */
 	    err;                 /* code d'erreur */
 	char* nomMachine;
-	char[30] joueur = 
 	
 	/* verification des arguments */
   	if (argc != 3) {
@@ -24,7 +23,7 @@ int main(int argc, char **argv) {
 	
 	TypPartieReq initialPartie;
 	initialPartie.idRequest = PARTIE;
-	initialPartie.nomJoueur = "Houriez - Spaseski";
+	initialPartie.nomJoueur = "Houriez-Spaseski";
 
 	/*
 	 * envoi de la requete initial
