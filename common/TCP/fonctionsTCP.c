@@ -23,6 +23,7 @@
 #include <netinet/in.h>
 #include <netdb.h>
 
+#include "fonctionsTCP.h"
 
 int socketServeur(ushort nbPort){
 	int  sockConx,          /* descripteur socket connexion */

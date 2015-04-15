@@ -21,6 +21,8 @@
 #include <errno.h>
 #include <unistd.h>
 
+#define ushort unsigned short
+
 
 int socketServeur(ushort nbPort);
 
