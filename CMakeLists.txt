@@ -12,3 +12,4 @@ set(CMAKE_C_FLAGS "-std=c99")
 # the project's entire directory structure.
 add_subdirectory (common)
 add_subdirectory (client)
+add_subdirectory (server)

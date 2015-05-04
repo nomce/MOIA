@@ -1,6 +1,7 @@
 # Create a library called "Hello" which includes the source file "hello.cxx".
 # The extension is already found. Any number of sources could be listed here.
 add_library (protocol fonctionsTCP.c)
+set_target_properties(protocol PROPERTIES LINKER_LANGUAGE C)
 
 # Make sure the compiler can find include files for our Hello library
 # when other libraries or executables link to Hello
