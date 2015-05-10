@@ -146,8 +146,6 @@ int main(int argc, char** argv) {
 		}
 	}
 
-	start = clock();
-
 	printf("Connecte\n");
 
 	TypCoupReq reponseCoup;
@@ -162,30 +160,35 @@ int main(int argc, char** argv) {
 	}
 
 	int x,y;
-
   	while(i < 50) {
+		start = clock();
 		if (tour){
 			err = recv(sockTransP1, &reponseCoup, sizeof(TypCoupReq), 0);
 			if (err > 0){
 				//valider la deplacement, et valider la case de depart
 				x = reponseCoup.deplCube.caseDepCube % 5;
 				y = reponseCoup.deplCube.caseDepCube / 5;
-				if (!validationCoup(0,reponseCoup) || tabQuixo[y][x] == CROIX){
+				printf("Dep = %d, X = %d, Y = %d\n", reponseCoup.deplCube.caseDepCube, x, y);
+				if (!validationCoup(0, reponseCoup) || tabQuixo[y][x] == CROIX) {
 					sendCoup.validCoup = TRICHE;
 					sendCoup.err = ERR_COUP;
 					err = send(sockTransP1, &sendCoup, sizeof(TypCoupRep), 0);
 					if (err <= 0) {
 						perror("server : erreur sur le recv joueur1");
-						shutdown(sockTransP1, 2); close(sockTransP1);
-						shutdown(sockTransP2, 2); close(sockTransP2);
+						shutdown(sockTransP1, 2);
+						close(sockTransP1);
+						shutdown(sockTransP2, 2);
+						close(sockTransP2);
 						close(sockConx);
 						return -1;
 					}
 					err = send(sockTransP2, &sendCoup, sizeof(TypCoupRep), 0);
 					if (err <= 0) {
 						perror("server : erreur sur le recv joueur1");
-						shutdown(sockTransP1, 2); close(sockTransP1);
-						shutdown(sockTransP2, 2); close(sockTransP2);
+						shutdown(sockTransP1, 2);
+						close(sockTransP1);
+						shutdown(sockTransP2, 2);
+						close(sockTransP2);
 						close(sockConx);
 						return -1;
 					}
@@ -195,22 +198,26 @@ int main(int argc, char** argv) {
 				//verifier le temps passe
 				end = clock();
 				cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
-				if (cpu_time_used >= 6){
+				if (cpu_time_used >= 6) {
 					sendCoup.validCoup = TIMEOUT;
 					sendCoup.err = ERR_COUP;
 					err = send(sockTransP1, &sendCoup, sizeof(TypCoupRep), 0);
 					if (err <= 0) {
 						perror("server : erreur sur le recv joueur1");
-						shutdown(sockTransP1, 2); close(sockTransP1);
-						shutdown(sockTransP2, 2); close(sockTransP2);
+						shutdown(sockTransP1, 2);
+						close(sockTransP1);
+						shutdown(sockTransP2, 2);
+						close(sockTransP2);
 						close(sockConx);
 						return -1;
 					}
 					err = send(sockTransP2, &sendCoup, sizeof(TypCoupRep), 0);
 					if (err <= 0) {
 						perror("server : erreur sur le recv joueur1");
-						shutdown(sockTransP1, 2); close(sockTransP1);
-						shutdown(sockTransP2, 2); close(sockTransP2);
+						shutdown(sockTransP1, 2);
+						close(sockTransP1);
+						shutdown(sockTransP2, 2);
+						close(sockTransP2);
 						close(sockConx);
 						return -1;
 					}
@@ -223,105 +230,122 @@ int main(int argc, char** argv) {
 				err = send(sockTransP1, &sendCoup, sizeof(TypCoupRep), 0);
 				if (err <= 0) {
 					perror("server : erreur sur le recv joueur1");
-					shutdown(sockTransP1, 2); close(sockTransP1);
-					shutdown(sockTransP2, 2); close(sockTransP2);
+					shutdown(sockTransP1, 2);
+					close(sockTransP1);
+					shutdown(sockTransP2, 2);
+					close(sockTransP2);
 					close(sockConx);
 					return -1;
 				}
 				err = send(sockTransP2, &reponseCoup, sizeof(TypCoupReq), 0);
 				if (err <= 0) {
 					perror("server : erreur sur le recv joueur1");
-					shutdown(sockTransP1, 2); close(sockTransP1);
-					shutdown(sockTransP2, 2); close(sockTransP2);
+					shutdown(sockTransP1, 2);
+					close(sockTransP1);
+					shutdown(sockTransP2, 2);
+					close(sockTransP2);
 					close(sockConx);
 					return -1;
 				}
 				tour == 0;
-			}else{
+			}else {
 				if (err < 0 && errno == EWOULDBLOCK) {
 					//printf(" Serveur : pas de message sur la socket\n ");
-				}else{
+				} else {
 					perror("serveurNB : erreur dans la reception 1");
-					shutdown(sockTransP1, 2); close(sockTransP1);
-					shutdown(sockTransP2, 2); close(sockTransP2);
+					shutdown(sockTransP1, 2);
+					close(sockTransP1);
+					shutdown(sockTransP2, 2);
+					close(sockTransP2);
 					close(sockConx);
 					return -1;
 				}
 			}
-
 		}else{
 			err = recv(sockTransP2, &reponseCoup, sizeof(TypCoupReq), 0);
 			if (err > 0){
-				//valider la deplacement, et valider la case de depart
-				x = reponseCoup.deplCube.caseDepCube % 5;
-				y = reponseCoup.deplCube.caseDepCube / 5;
-				if (!validationCoup(0,reponseCoup) || tabQuixo[y][x] == CROIX){
-					sendCoup.validCoup = TRICHE;
-					sendCoup.err = ERR_COUP;
-					err = send(sockTransP2, &sendCoup, sizeof(TypCoupRep), 0);
-					if (err <= 0) {
-						perror("server : erreur sur le recv joueur1");
-						shutdown(sockTransP1, 2); close(sockTransP1);
-						shutdown(sockTransP2, 2); close(sockTransP2);
-						close(sockConx);
-						return -1;
+					//valider la deplacement, et valider la case de depart
+					x = reponseCoup.deplCube.caseDepCube % 5;
+					y = reponseCoup.deplCube.caseDepCube / 5;
+					if (!validationCoup(0, reponseCoup) || tabQuixo[y][x] == ROND) {
+						sendCoup.validCoup = TRICHE;
+						sendCoup.err = ERR_COUP;
+						err = send(sockTransP2, &sendCoup, sizeof(TypCoupRep), 0);
+						if (err <= 0) {
+							perror("server : erreur sur le recv joueur1");
+							shutdown(sockTransP1, 2);
+							close(sockTransP1);
+							shutdown(sockTransP2, 2);
+							close(sockTransP2);
+							close(sockConx);
+							return -1;
+						}
+						err = send(sockTransP2, &sendCoup, sizeof(TypCoupRep), 0);
+						if (err <= 0) {
+							perror("server : erreur sur le recv joueur1");
+							shutdown(sockTransP1, 2);
+							close(sockTransP1);
+							shutdown(sockTransP2, 2);
+							close(sockTransP2);
+							close(sockConx);
+							return -1;
+						}
+						break;
 					}
-					err = send(sockTransP2, &sendCoup, sizeof(TypCoupRep), 0);
-					if (err <= 0) {
-						perror("server : erreur sur le recv joueur1");
-						shutdown(sockTransP1, 2); close(sockTransP1);
-						shutdown(sockTransP2, 2); close(sockTransP2);
-						close(sockConx);
-						return -1;
-					}
-					break;
-				}
 
-				//verifier le temps passe
-				end = clock();
-				cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
-				if (cpu_time_used >= 6){
-					sendCoup.validCoup = TIMEOUT;
-					sendCoup.err = ERR_COUP;
-					err = send(sockTransP1, &sendCoup, sizeof(TypCoupRep), 0);
-					if (err <= 0) {
-						perror("server : erreur sur le recv joueur1");
-						shutdown(sockTransP1, 2); close(sockTransP1);
-						shutdown(sockTransP2, 2); close(sockTransP2);
-						close(sockConx);
-						return -1;
+					//verifier le temps passe
+					end = clock();
+					cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
+					if (cpu_time_used >= 6) {
+						sendCoup.validCoup = TIMEOUT;
+						sendCoup.err = ERR_COUP;
+						err = send(sockTransP1, &sendCoup, sizeof(TypCoupRep), 0);
+						if (err <= 0) {
+							perror("server : erreur sur le recv joueur1");
+							shutdown(sockTransP1, 2);
+							close(sockTransP1);
+							shutdown(sockTransP2, 2);
+							close(sockTransP2);
+							close(sockConx);
+							return -1;
+						}
+						err = send(sockTransP2, &sendCoup, sizeof(TypCoupRep), 0);
+						if (err <= 0) {
+							perror("server : erreur sur le recv joueur1");
+							shutdown(sockTransP1, 2);
+							close(sockTransP1);
+							shutdown(sockTransP2, 2);
+							close(sockTransP2);
+							close(sockConx);
+							return -1;
+						}
+						break;
 					}
+
+					// le coup est valid, on continue
+					sendCoup.validCoup = VALID;
+					sendCoup.err = ERR_OK;
 					err = send(sockTransP2, &sendCoup, sizeof(TypCoupRep), 0);
 					if (err <= 0) {
 						perror("server : erreur sur le recv joueur1");
-						shutdown(sockTransP1, 2); close(sockTransP1);
-						shutdown(sockTransP2, 2); close(sockTransP2);
+						shutdown(sockTransP1, 2);
+						close(sockTransP1);
+						shutdown(sockTransP2, 2);
+						close(sockTransP2);
 						close(sockConx);
 						return -1;
 					}
-					break;
-				}
-
-				// le coup est valid, on continue
-				sendCoup.validCoup = VALID;
-				sendCoup.err = ERR_OK;
-				err = send(sockTransP2, &sendCoup, sizeof(TypCoupRep), 0);
-				if (err <= 0) {
-					perror("server : erreur sur le recv joueur1");
-					shutdown(sockTransP1, 2); close(sockTransP1);
-					shutdown(sockTransP2, 2); close(sockTransP2);
-					close(sockConx);
-					return -1;
-				}
-				err = send(sockTransP1, &reponseCoup, sizeof(TypCoupReq), 0);
-				if (err <= 0) {
-					perror("server : erreur sur le recv joueur1");
-					shutdown(sockTransP1, 2); close(sockTransP1);
-					shutdown(sockTransP2, 2); close(sockTransP2);
-					close(sockConx);
-					return -1;
-				}
-				tour == 1;
+					err = send(sockTransP1, &reponseCoup, sizeof(TypCoupReq), 0);
+					if (err <= 0) {
+						perror("server : erreur sur le recv joueur1");
+						shutdown(sockTransP1, 2);
+						close(sockTransP1);
+						shutdown(sockTransP2, 2);
+						close(sockTransP2);
+						close(sockConx);
+						return -1;
+					}
+					tour == 1;
 			}else{
 				if (err < 0 && errno == EWOULDBLOCK) {
 					//printf(" Serveur : pas de message sur la socket\n ");

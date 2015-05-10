@@ -6,6 +6,7 @@
 *    A compiler et à exécuter en spécifiant le classpath de Jasper.
 *
 *      - sur Linux : /applis/sicstus-3.11.2/lib/sicstus-3.11.2/bin/jasper.jar
+ *      	/usr/local/sicstus4.3.1/lib/sicstus4.3.1/bin/jasper.jar
 *
 *          + executer la commande : export LD_LIBRARY_PATH=/applis/sicstus-3.11.2/lib/
 *                à chaque session.
