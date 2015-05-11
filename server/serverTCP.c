@@ -19,7 +19,7 @@ int main(int argc, char** argv) {
 			sizeAddr,     /* taille de l'adresse d'une socket */
 			on = 0,
 			tour = 1;
-	ssize_t err;	      /* code d'erreur */
+	ssize_t err, err2;	      /* code d'erreur */
   
   	char buffer[TAIL_BUF]; /* buffer de reception */
   
@@ -77,18 +77,21 @@ int main(int argc, char** argv) {
    	 * attente de joueurs
    	 */
 
-	TypPartieReq* joueur1;
-	TypPartieReq* joueur2;
+	TypPartieReq joueur1;
+	TypPartieReq joueur2;
 
 	TypPartieRep reponse;
+	err = 0;
+	err2 = 0;
 
-	while (!joueur1->nomJoueur || !joueur2->nomJoueur) {
-		if (!joueur1->nomJoueur) {
+	do {
+		printf("TEEEEST\n");
+		if (err <= 0) {
 			err = recv(sockTransP1, &joueur1, sizeof(TypPartieReq), 0);
 			if (err > 0) {
 				int i;
-				for (i = 0; i < strlen(joueur1->nomJoueur); i++) {
-					reponse.nomAdvers[i] = joueur1->nomJoueur[i];
+				for (i = 0; i < strlen(joueur1.nomJoueur); i++) {
+					reponse.nomAdvers[i] = joueur1.nomJoueur[i];
 				}
 				reponse.signe = ROND;
 				reponse.err = ERR_OK;
@@ -115,12 +118,12 @@ int main(int argc, char** argv) {
 					return -1;
 				}
 			}
-		}if (!joueur2->nomJoueur){
+		}if (!joueur2.nomJoueur){
 			err = recv(sockTransP2, &joueur2, sizeof(TypPartieReq), 0);
 			if (err > 0){
 				int i;
-				for (i = 0; i < strlen(joueur2->nomJoueur);i++){
-					reponse.nomAdvers[i] = joueur2->nomJoueur[i];
+				for (i = 0; i < strlen(joueur2.nomJoueur);i++){
+					reponse.nomAdvers[i] = joueur2.nomJoueur[i];
 				}
 				reponse.signe = CROIX;
 				reponse.err = ERR_OK;
@@ -144,9 +147,9 @@ int main(int argc, char** argv) {
 				}
 			}
 		}
-	}
+	}while (err <= 0 && err2 <= 0);
 
-	printf("Connecte\n");
+	printf("Connecte %s vs. %s\n",joueur1.nomJoueur,joueur2.nomJoueur);
 
 	TypCoupReq reponseCoup;
 	TypCoupRep sendCoup;

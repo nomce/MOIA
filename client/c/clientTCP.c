@@ -6,11 +6,13 @@
 int main(int argc, char **argv) {
 
 	int sock,                /* descripteur de la socket locale */
-		sockJava,
+		sockJava,sockJavaConx,
 		portJava,
+		sizeAddr,     /* taille de l'adresse d'une socket */
 	    port;                /* variables de lecture */
 	ssize_t err;             /* code d'erreur */
 	char* nomMachine;
+	struct sockaddr_in nomTransmis;	/* adresse socket de transmission */
 
 	/* verification des arguments */
   	if (argc != 5) {
@@ -21,9 +23,18 @@ int main(int argc, char **argv) {
 	nomMachine = argv[1];
 	port = atoi(argv[2]);
 
+	sockJavaConx = socketServeur(atoi(argv[4]));
+	
+	sockJava = accept(sockJavaConx,
+		     (struct sockaddr *)&nomTransmis, 
+		     (socklen_t *)&sizeAddr);
+  	if (sockJavaConx < 0) {
+   		perror("ClientTCP (versJava):  erreur sur accept");
+    		return -5;
+  	}
+	
 	sock = socketClient(nomMachine,port);
-	sockJava = socketClient("localhost",atoi(argv[4]));
-
+	
 	TypPartieReq initialPartie;
 	initialPartie.idRequest = PARTIE;
 	int i;
@@ -176,6 +187,18 @@ int main(int argc, char **argv) {
 			return -7;
 		}
 
+		/*if(nombreCoup >= 2) {
+
+			TypCoupRep validCoup2;
+			err = recv(sock, &validCoup2, sizeof(TypCoupRep), 0);
+			if (err < 0) {
+				perror("client: erreur dans la reception\n");
+				shutdown(sock, 2); close(sock);
+				return -7;
+			}
+			printf("err: %d,  validcoup: %d\n",validCoup2.err,validCoup2.validCoup);
+		}*/
+
 		//reception du coup d'adversaire
 		err = recv(sock, &coupAdv, sizeof(TypCoupReq), 0);
 		if (err < 0) {
@@ -283,7 +306,18 @@ int main(int argc, char **argv) {
 			exit(3);
 		}
 
-		//validationCoup(0, coup);
+		err = recv(sock, &validCoup, sizeof(TypCoupRep), 0);
+		if (err < 0) {
+			perror("client: erreur dans la reception");
+			shutdown(sock, 2); close(sock);
+			return -7;
+		}
+
+		if (validCoup.err != ERR_OK || validCoup.validCoup != VALID){
+			perror("client: erreur dans la validation du coup");
+			shutdown(sock, 2); close(sock);
+			return -7;
+		}
 
 		printf("Test avant, nb %d, coupAdv: %d, coup: %d \n",nombreCoup, validCoupAdv.validCoup, validCoup.validCoup);
 

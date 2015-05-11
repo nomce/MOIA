@@ -2,31 +2,31 @@
  * Created by nomce on 09/05/15.
  */
 public class Coup {
-    private short valid;
-    private short depart;
-    private short arrivee;
+    private int valid;
+    private int depart;
+    private int arrivee;
 
-    public short getValid() {
+    public int getValid() {
         return valid;
     }
 
-    public void setValid(short valid) {
+    public void setValid(int valid) {
         this.valid = valid;
     }
 
-    public short getDepart() {
+    public int getDepart() {
         return depart;
     }
 
-    public void setDepart(short depart) {
+    public void setDepart(int depart) {
         this.depart = depart;
     }
 
-    public short getArrivee() {
+    public int getArrivee() {
         return arrivee;
     }
 
-    public void setArrivee(short arrivee) {
+    public void setArrivee(int arrivee) {
         this.arrivee = arrivee;
     }
 
