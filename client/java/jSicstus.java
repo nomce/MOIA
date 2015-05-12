@@ -39,7 +39,7 @@ public class jSicstus {
 	    sp = new SICStus();
 	
 	    // Chargement d'un fichier prolog .pl
-	    sp.load("td2.pro");
+	    sp.load("QuixoIA.pro");
 	
 	}
 	// exception déclanchée par SICStus lors de la création de l'objet sp
@@ -51,7 +51,7 @@ public class jSicstus {
 
 	// lecture au clavier d'une requète Prolog
 	System.out.print("| ?- ");
-	saisie = "lab(S).";
+	saisie = "minimax([v,v,v,v,v,v,v,v,v,v,v,v,v,v,v,v,v,v,v,v,v,v,v,v,v], o, 2, Pos, Dir).";
 
 	// boucle pour saisir les informations
 	while (! saisie.equals("halt.")) {
